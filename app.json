@@ -1,0 +1,12 @@
+{
+  "name": "RiseRank",
+  "displayName": "RiseRank",
+  "version": "1.0.0",
+  "android": {
+    "package": "com.riserank.app",
+    "versionCode": 1
+  },
+  "ios": {
+    "bundleIdentifier": "com.riserank.app"
+  }
+}

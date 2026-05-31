@@ -1,0 +1,7 @@
+/* NativeWind v4 — this file is the Tailwind CSS entry point.
+   Metro picks it up via metro.config.js → withNativeWind({ input: './global.css' })
+   Add any @layer base / components / utilities overrides here. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

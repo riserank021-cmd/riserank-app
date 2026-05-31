@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- FCM notification accent color (matches Tailwind primary-600) -->
+    <color name="primary">#2563EB</color>
+    <!-- Status bar / splash background -->
+    <color name="background">#F8FAFC</color>
+    <!-- Navigation bar -->
+    <color name="navigationBar">#FFFFFF</color>
+</resources>

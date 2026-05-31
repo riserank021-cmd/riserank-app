@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────
+# Node
+# ─────────────────────────────────────────────
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.yarn/
+
+# ─────────────────────────────────────────────
+# React Native / Metro
+# ─────────────────────────────────────────────
+.metro-health-check*
+.metro/
+# Metro bundler cache
+.metro-cache/
+
+# ─────────────────────────────────────────────
+# Android
+# ─────────────────────────────────────────────
+android/app/build/
+android/build/
+android/.gradle/
+android/captures/
+android/local.properties         # contains keystore paths/passwords — NEVER commit
+android/app/google-services.json # Firebase config — add separately per environment
+android/app/release/
+android/app/*.keystore
+android/app/*.jks
+*.keystore
+*.jks
+
+# Android Studio
+.idea/
+*.iml
+.DS_Store
+
+# ─────────────────────────────────────────────
+# iOS
+# ─────────────────────────────────────────────
+ios/Pods/
+ios/build/
+ios/*.xcworkspace
+ios/DerivedData/
+ios/GoogleService-Info.plist     # Firebase iOS config
+
+# ─────────────────────────────────────────────
+# Environment / Secrets
+# ─────────────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.production.local
+.env.*
+
+# ─────────────────────────────────────────────
+# NativeWind / Tailwind
+# ─────────────────────────────────────────────
+# Generated CSS — rebuilt by metro on start
+nativewind-output.css
+
+# ─────────────────────────────────────────────
+# TypeScript
+# ─────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─────────────────────────────────────────────
+# Misc
+# ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+coverage/
+.nyc_output/
+dist/
