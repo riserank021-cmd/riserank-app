@@ -7,13 +7,16 @@ import React from 'react';
 import { View, Text, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useAuthStore } from '../store/authStore';
 import type {
   AppTabParamList,
   HomeStackParamList,
   QuizStackParamList,
   CurrentAffairsStackParamList,
   LeaderboardStackParamList,
+  LiveTestStackParamList,
   ProfileStackParamList,
+  AdminStackParamList,
 } from '../types/navigation.types';
 
 // ── Screen imports ────────────────────────────────────────────────────────────
@@ -24,6 +27,7 @@ import { QuizDetailScreen } from '../screens/quiz/QuizDetailScreen';
 import { QuizAttemptScreen } from '../screens/quiz/QuizAttemptScreen';
 import { QuizResultScreen } from '../screens/quiz/QuizResultScreen';
 import { QuizReviewScreen } from '../screens/quiz/QuizReviewScreen';
+import { PracticePickerScreen } from '../screens/quiz/PracticePickerScreen';
 import { CurrentAffairsListScreen } from '../screens/currentAffairs/CurrentAffairsListScreen';
 import { CurrentAffairsDetailScreen } from '../screens/currentAffairs/CurrentAffairsDetailScreen';
 import { LeaderboardScreen } from '../screens/leaderboard/LeaderboardScreen';
@@ -34,6 +38,14 @@ import { BookmarksScreen } from '../screens/profile/BookmarksScreen';
 import { SettingsScreen } from '../screens/profile/SettingsScreen';
 import { QuizHistoryScreen } from '../screens/profile/QuizHistoryScreen';
 import { NotificationsScreen } from '../screens/profile/NotificationsScreen';
+import { LiveTestsScreen } from '../screens/liveTest/LiveTestsScreen';
+import { LiveTestDetailScreen } from '../screens/liveTest/LiveTestDetailScreen';
+import { LiveTestAttemptScreen } from '../screens/liveTest/LiveTestAttemptScreen';
+import { LiveTestResultScreen } from '../screens/liveTest/LiveTestResultScreen';
+import { AdminDashboardScreen } from '../screens/admin/AdminDashboardScreen';
+import { AddQuestionScreen } from '../screens/admin/AddQuestionScreen';
+import { AddCurrentAffairsScreen } from '../screens/admin/AddCurrentAffairsScreen';
+import { BulkImportScreen } from '../screens/admin/BulkImportScreen';
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
 
@@ -72,6 +84,7 @@ function QuizStackNavigator() {
       <QuizStack.Screen name="QuizAttempt" component={QuizAttemptScreen} options={{ gestureEnabled: false }} />
       <QuizStack.Screen name="QuizResult" component={QuizResultScreen} />
       <QuizStack.Screen name="QuizReview" component={QuizReviewScreen} />
+      <QuizStack.Screen name="PracticePicker" component={PracticePickerScreen} />
     </QuizStack.Navigator>
   );
 }
@@ -110,9 +123,36 @@ function ProfileStackNavigator() {
   );
 }
 
+const LiveTestStack = createNativeStackNavigator<LiveTestStackParamList>();
+function LiveTestStackNavigator() {
+  return (
+    <LiveTestStack.Navigator screenOptions={{ headerShown: false }}>
+      <LiveTestStack.Screen name="LiveTestList" component={LiveTestsScreen} />
+      <LiveTestStack.Screen name="LiveTestDetail" component={LiveTestDetailScreen} />
+      <LiveTestStack.Screen name="LiveTestAttempt" component={LiveTestAttemptScreen} options={{ gestureEnabled: false }} />
+      <LiveTestStack.Screen name="LiveTestResult" component={LiveTestResultScreen} />
+    </LiveTestStack.Navigator>
+  );
+}
+
+const AdminStack = createNativeStackNavigator<AdminStackParamList>();
+function AdminStackNavigator() {
+  return (
+    <AdminStack.Navigator screenOptions={{ headerShown: false }}>
+      <AdminStack.Screen name="AdminDashboard" component={AdminDashboardScreen} />
+      <AdminStack.Screen name="AddQuestion" component={AddQuestionScreen} />
+      <AdminStack.Screen name="AddCurrentAffairs" component={AddCurrentAffairsScreen} />
+      <AdminStack.Screen name="BulkImport" component={BulkImportScreen} />
+    </AdminStack.Navigator>
+  );
+}
+
 // ── Bottom Tab Navigator ──────────────────────────────────────────────────────
 
 export function AppNavigator() {
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -145,10 +185,17 @@ export function AppNavigator() {
         }}
       />
       <Tab.Screen
+        name="LiveTab"
+        component={LiveTestStackNavigator}
+        options={{
+          tabBarIcon: ({ focused }) => <TabIcon icon="🔴" label="Live" focused={focused} />,
+        }}
+      />
+      <Tab.Screen
         name="CurrentAffairsTab"
         component={CAStackNavigator}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcon icon="📰" label="News" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="📰" label="Current Affairs" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -165,6 +212,15 @@ export function AppNavigator() {
           tabBarIcon: ({ focused }) => <TabIcon icon="👤" label="Profile" focused={focused} />,
         }}
       />
+      {isAdmin && (
+        <Tab.Screen
+          name="AdminTab"
+          component={AdminStackNavigator}
+          options={{
+            tabBarIcon: ({ focused }) => <TabIcon icon="⚙️" label="Admin" focused={focused} />,
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 }
