@@ -43,12 +43,21 @@ export const CurrentAffairCard = React.memo(function CurrentAffairCard({ item, o
         ) : null}
 
         <View className="flex-row items-center justify-between mt-3">
-          {item.publishedAt && (
-            <Text className="text-text-muted text-xs">{formatDate(item.publishedAt)}</Text>
-          )}
-          {item.tags.length > 0 && (
+          <View className="flex-1 mr-2">
+            {item.publishedAt && (
+              <Text className="text-text-muted text-xs">
+                🕐 {formatDate(item.publishedAt, 'dd MMM yyyy, hh:mm a')}
+              </Text>
+            )}
+            {item.createdBy?.name && (
+              <Text className="text-primary-600 text-[11px] font-medium mt-0.5">
+                ✍️ {item.createdBy.name}
+              </Text>
+            )}
+          </View>
+          {(item.tags ?? []).length > 0 && (
             <View className="flex-row">
-              {item.tags.slice(0, 2).map((tag) => (
+              {(item.tags ?? []).slice(0, 2).map((tag) => (
                 <View key={tag} className="bg-primary-50 rounded-full px-2 py-0.5 ml-1">
                   <Text className="text-primary-700 text-[10px] font-medium">{tag}</Text>
                 </View>

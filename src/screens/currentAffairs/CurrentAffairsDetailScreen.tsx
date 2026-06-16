@@ -72,7 +72,7 @@ export function CurrentAffairsDetailScreen({ route, navigation }: CurrentAffairs
   );
 
   const title = t(item.title, language);
-  const content = t(item.content, language);
+  const content = t(item.body ?? item.content, language);   // backend uses 'body'
   const summary = t(item.summary, language);
 
   return (
@@ -105,9 +105,9 @@ export function CurrentAffairsDetailScreen({ route, navigation }: CurrentAffairs
 
         <View className="px-4 pt-5">
           {/* Tags */}
-          {item.tags.length > 0 && (
+          {(item.tags ?? []).length > 0 && (
             <View className="flex-row flex-wrap gap-2 mb-3">
-              {item.tags.map((tag) => (
+              {(item.tags ?? []).map((tag) => (
                 <View key={tag} className="bg-primary-50 border border-primary-200 rounded-full px-3 py-1">
                   <Text className="text-primary-700 text-xs font-medium">{tag}</Text>
                 </View>
@@ -118,10 +118,22 @@ export function CurrentAffairsDetailScreen({ route, navigation }: CurrentAffairs
           {/* Title */}
           <Text className="text-text-primary text-2xl font-bold leading-7">{title}</Text>
 
-          {/* Date */}
-          {item.publishedAt && (
-            <Text className="text-text-muted text-xs mt-2">{formatDate(item.publishedAt, 'dd MMMM yyyy')}</Text>
-          )}
+          {/* Date, Time & Author */}
+          <View className="flex-row items-center flex-wrap gap-2 mt-2">
+            {item.publishedAt && (
+              <Text className="text-text-muted text-xs">
+                🕐 {formatDate(item.publishedAt, 'dd MMM yyyy, hh:mm a')}
+              </Text>
+            )}
+            {item.createdBy?.name && (
+              <View className="flex-row items-center">
+                <Text className="text-text-muted text-xs">  •  </Text>
+                <Text className="text-primary-600 text-xs font-medium">
+                  ✍️ {item.createdBy.name}
+                </Text>
+              </View>
+            )}
+          </View>
 
           {/* Summary */}
           {summary ? (

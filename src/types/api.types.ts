@@ -99,32 +99,36 @@ export interface Category {
 export interface CurrentAffair {
   _id: string;
   title: Bilingual;
-  content: Bilingual;
-  summary: Bilingual;
+  body: Bilingual;        // backend field name
+  content?: Bilingual;   // legacy alias — prefer body
+  summary?: Bilingual;
   imageUrl?: string;
   category: Category | string;
   tags: string[];
   publishedAt: string | null;
   status: 'draft' | 'published' | 'archived';
   createdAt: string;
+  createdBy?: { _id: string; name: string } | null;
 }
 
 // ── Question ──────────────────────────────────────────────────────────────────
 
 export interface QuestionOption {
-  label: 'A' | 'B' | 'C' | 'D';
+  key: 'A' | 'B' | 'C' | 'D';   // backend field name (was incorrectly 'label')
   text: Bilingual;
 }
 
 export interface Question {
   _id: string;
-  text: Bilingual;
+  questionText: Bilingual;        // backend field name (was incorrectly 'text')
   options: QuestionOption[];
   correctOption: 'A' | 'B' | 'C' | 'D';
   explanation: Bilingual;
   difficulty: 'easy' | 'medium' | 'hard';
-  examType: string;
-  category: Category | string;
+  examCategory: string;           // backend field name (was incorrectly 'examType')
+  subject?: string;
+  topic?: string;
+  tags?: string[];
   attemptCount: number;
   correctCount: number;
 }
@@ -135,17 +139,24 @@ export interface Quiz {
   _id: string;
   title: Bilingual;
   description: Bilingual;
-  category: Category | string;
+  examCategory: string;              // ssc | railway | banking | bihar_si
   questions: Question[] | string[];
-  totalMarks: number;
-  durationMinutes: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  totalMarks: number | null;
+  durationSeconds: number;           // source of truth
+  durationMinutes: number;           // Mongoose virtual (durationSeconds / 60)
   negativeMarking: boolean;
   negativeMarkValue: number;
   isDaily: boolean;
   scheduledDate?: string;
-  isPublished: boolean;
+  isPractice: boolean;
+  practiceSubject?: string | null;
+  practiceTopic?: string | null;
+  status: 'draft' | 'published' | 'archived';
   attemptCount: number;
+  averageScore: number;
   createdAt: string;
+  updatedAt: string;
 }
 
 // ── Quiz Attempt ──────────────────────────────────────────────────────────────
@@ -176,6 +187,58 @@ export interface QuizAttempt {
   isCompleted: boolean;
   language: Language;
   createdAt: string;
+  /** All India Rank — rank among all users who attempted this quiz */
+  rank?: number;
+  totalAttempts?: number;
+}
+
+// ── Live Test ─────────────────────────────────────────────────────────────────
+
+export interface LiveTest {
+  _id: string;
+  title: Bilingual;
+  description: Bilingual;
+  examCategory: string;
+  questions: Question[] | string[];
+  scheduledAt: string;
+  durationSeconds: number;
+  totalMarks: number | null;
+  negativeMarking: boolean;
+  negativeMarkValue: number;
+  status: 'upcoming' | 'live' | 'ended';
+  registeredCount: number;
+  participantCount: number;
+  endAt: string;
+  createdAt: string;
+}
+
+export interface LiveTestAttempt {
+  _id: string;
+  liveTest: string | LiveTest;
+  user: string | User;
+  answers: AttemptAnswer[];
+  score: number;
+  correctCount: number;
+  wrongCount: number;
+  skippedCount: number;
+  percentage: number;
+  timeTakenSeconds: number;
+  isCompleted: boolean;
+  rank: number | null;
+  language: Language;
+  startedAt: string;
+  submittedAt: string | null;
+}
+
+export interface LiveTestLeaderboardEntry {
+  rank: number;
+  userId: string;
+  name: string;
+  avatar: string | null;
+  score: number;
+  percentage: number;
+  correctCount: number;
+  timeTakenSeconds: number;
 }
 
 // ── Category Stats ────────────────────────────────────────────────────────────

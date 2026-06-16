@@ -37,11 +37,26 @@ export function LeaderboardScreen() {
         userService.getMyRank(selectedPeriod),
       ]);
       if (listRes.status === 'fulfilled') {
-        setEntries(listRes.value.data.data ?? []);
+        // Backend returns { user: {_id,name}, score, totalQuizzes, rank }
+        // Map to the LeaderboardEntry shape the UI expects
+        const raw: any[] = listRes.value.data.data ?? [];
+        const mapped = raw.map((item, idx) => ({
+          rank: typeof item.rank === 'number' && item.rank > 0 ? item.rank : idx + 1,
+          userId: item.user?._id ?? String(item.user ?? ''),
+          name: item.user?.name ?? 'User',
+          avatar: item.user?.avatar ?? null,
+          score: item.score ?? 0,
+          quizCount: item.totalQuizzes ?? 0,
+          period: selectedPeriod,
+        }));
+        setEntries(mapped);
       } else {
         setError(extractError(listRes.reason));
       }
-      if (rankRes.status === 'fulfilled') setMyRank(rankRes.value.data.data?.rank ?? null);
+      if (rankRes.status === 'fulfilled') {
+        const rankData = rankRes.value.data.data;
+        setMyRank(rankData?.rank ?? null);
+      }
     } catch (err) {
       setError(extractError(err));
     } finally {
