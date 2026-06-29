@@ -8,6 +8,12 @@ buildscript {
         targetSdkVersion  = 34
         ndkVersion        = "26.1.10909125"
         kotlinVersion     = "1.9.22"
+        // react-native-google-mobile-ads reads this from google-services.json via the
+        // google-services plugin. Since we ship without google-services.json we set it
+        // to null here so the library's build.gradle `if (rootProject.ext.googleMobileAdsJson)`
+        // check short-circuits cleanly. The real App ID is in AndroidManifest.xml.
+        googleMobileAdsApplicationId = "ca-app-pub-4897943258060219~7356146761"
+        googleMobileAdsJson = null
     }
 
     repositories {
