@@ -8,5 +8,9 @@
   },
   "ios": {
     "bundleIdentifier": "com.riserank.app"
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-4897943258060219~7356146761",
+    "ios_app_id": "ca-app-pub-4897943258060219~7356146761"
   }
 }
