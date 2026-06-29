@@ -27,11 +27,14 @@ import { linking } from './src/navigation/linking';
 import { navigationRef } from './src/navigation/navigationRef';
 import { initCrashReporter, reportError } from './src/services/crashReporter';
 import { configureGoogleSignIn } from './src/services/googleAuth.service';
+import { initAds } from './src/services/ads.service';
 import { useAppVersion } from './src/hooks/useAppVersion';
 import { UpdateModal } from './src/components/ui/UpdateModal';
 
 // Initialise Sentry as early as possible — before any React render.
 initCrashReporter();
+// Initialise AdMob
+initAds();
 
 // Configure Google Sign-In once at module load time.
 // Replace the string below with your Web Client ID from Google Cloud Console,

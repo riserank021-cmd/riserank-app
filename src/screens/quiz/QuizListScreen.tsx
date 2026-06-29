@@ -8,7 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApiError } from '../../hooks/useApiError';
 import { listQuizzes } from '../../api/quizCacheService';
 import { QuizCard, LoadingSpinner, EmptyState, LanguageToggle, CategoryFilterBar, QuizCardSkeleton } from '../../components';
-import { EXAM_CATEGORIES } from '../../utils/constants';
+import { EXAM_CATEGORIES, EXAM_CATEGORY_API_VALUE } from '../../utils/constants';
+import { BannerAdView } from '../../components/ads/BannerAdView';
 import type { Quiz } from '../../types/api.types';
 import type { QuizScreenProps } from '../../types/navigation.types';
 
@@ -38,7 +39,7 @@ export function QuizListScreen({ navigation, route }: QuizScreenProps<'QuizList'
       const { data: items, fromCache } = await listQuizzes({
         page: pg,
         limit: 20,
-        ...(cat ? { category: cat } : {}),
+        ...(cat ? { examCategory: EXAM_CATEGORY_API_VALUE[cat] ?? cat.toLowerCase() } : {}),
         ...(query ? { search: query } : {}),
       });
       const safeItems = items ?? [];
@@ -106,6 +107,24 @@ export function QuizListScreen({ navigation, route }: QuizScreenProps<'QuizList'
         </View>
       </View>
 
+      {/* Practice by Topic banner */}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('PracticePicker', { examCategory: category || 'ssc' })}
+        activeOpacity={0.85}
+        className="mx-4 mt-3 mb-1 bg-primary-600 rounded-2xl px-4 py-3 flex-row items-center justify-between"
+      >
+        <View className="flex-row items-center gap-3">
+          <View className="bg-white/20 rounded-xl w-10 h-10 items-center justify-center">
+            <Text style={{ fontSize: 20 }}>🎯</Text>
+          </View>
+          <View>
+            <Text className="text-white font-bold text-sm">Practice by Topic</Text>
+            <Text className="text-primary-200 text-xs mt-0.5">History · Polity · Synonyms · and more</Text>
+          </View>
+        </View>
+        <Text className="text-white text-lg">→</Text>
+      </TouchableOpacity>
+
       {/* Category filter chips */}
       <CategoryFilterBar
         options={EXAM_CATEGORIES}
@@ -167,6 +186,7 @@ export function QuizListScreen({ navigation, route }: QuizScreenProps<'QuizList'
           }
         />
       )}
+      <BannerAdView />
     </SafeAreaView>
   );
 }

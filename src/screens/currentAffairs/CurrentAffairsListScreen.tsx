@@ -16,6 +16,7 @@ import { currentAffairsService } from '../../api/currentAffairs.service';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useApiError } from '../../hooks/useApiError';
 import { CurrentAffairCard, LoadingSpinner, EmptyState, LanguageToggle, CategoryFilterBar, CurrentAffairCardSkeleton } from '../../components';
+import { BannerAdView } from '../../components/ads/BannerAdView';
 import type { CurrentAffair } from '../../types/api.types';
 import type { CurrentAffairsScreenProps } from '../../types/navigation.types';
 
@@ -169,6 +170,7 @@ export function CurrentAffairsListScreen({ navigation }: CurrentAffairsScreenPro
           }
         />
       )}
+      <BannerAdView />
     </SafeAreaView>
   );
 }

@@ -28,6 +28,7 @@ import { useAppStore } from '../../store/appStore';
 import { useLanguage } from '../../hooks/useLanguage';
 import { Button, QuestionCard, ProgressBar } from '../../components';
 import { ReportQuestionModal } from '../../components/quiz/ReportQuestionModal';
+import { useRewardedAd } from '../../hooks/useRewardedAd';
 import type { Question, AnswerPayload } from '../../types/api.types';
 import type { OptionLabel } from '../../utils/constants';
 import type { QuizScreenProps } from '../../types/navigation.types';
@@ -63,6 +64,9 @@ export function QuizAttemptScreen({ route, navigation }: QuizScreenProps<'QuizAt
   const [reportQuestionId, setReportQuestionId] = useState<string | null>(null);
   // Set of bookmarked question IDs for this attempt session
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
+  // Rewarded ad — user watches ad to skip/reveal hint for current question
+  const { show: showRewarded, isLoaded: rewardedLoaded } = useRewardedAd();
+  const [hintQuestionId, setHintQuestionId] = useState<string | null>(null);
 
   // ── Slide transition helpers ────────────────────────────────────────────────
   // Animates the current card out, swaps content (via `swap`), then animates in.
@@ -138,7 +142,7 @@ export function QuizAttemptScreen({ route, navigation }: QuizScreenProps<'QuizAt
   // ── Countdown timer ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!activeQuiz) return;
-    const totalSeconds = activeQuiz.durationMinutes * 60;
+    const totalSeconds = (activeQuiz.durationMinutes ?? Math.round((activeQuiz.durationSeconds ?? 600) / 60)) * 60;
 
     timerRef.current = setInterval(() => {
       tick();
@@ -157,7 +161,7 @@ export function QuizAttemptScreen({ route, navigation }: QuizScreenProps<'QuizAt
       if (nextState === 'active') {
         // App came back to foreground — restart the interval
         if (timerRef.current) clearInterval(timerRef.current);
-        const totalSeconds = activeQuiz ? activeQuiz.durationMinutes * 60 : 0;
+        const totalSeconds = activeQuiz ? (activeQuiz.durationMinutes ?? Math.round((activeQuiz.durationSeconds ?? 600) / 60)) * 60 : 0;
         timerRef.current = setInterval(() => {
           tick();
           if (useQuizStore.getState().timeTakenSeconds >= totalSeconds) {
@@ -261,7 +265,7 @@ export function QuizAttemptScreen({ route, navigation }: QuizScreenProps<'QuizAt
   }
 
   const questions = activeQuiz.questions as Question[];
-  const totalSeconds = activeQuiz.durationMinutes * 60;
+  const totalSeconds = (activeQuiz.durationMinutes ?? Math.round((activeQuiz.durationSeconds ?? 600) / 60)) * 60;
   const remaining = Math.max(0, totalSeconds - timeTakenSeconds);
   const progress = ((currentIndex + 1) / questions.length) * 100;
   const answered = Object.keys(answers).length;
@@ -354,6 +358,30 @@ export function QuizAttemptScreen({ route, navigation }: QuizScreenProps<'QuizAt
             );
           })}
         </ScrollView>
+
+        {/* Rewarded hint row */}
+        {rewardedLoaded && hintQuestionId !== questions[currentIndex]?._id && (
+          <TouchableOpacity
+            onPress={() => {
+              const currentQ = questions[currentIndex];
+              showRewarded(
+                () => {
+                  // Reward earned: reveal the correct answer by selecting it
+                  const correctOpt = currentQ.options.find((o: any) => o.isCorrect);
+                  if (correctOpt) {
+                    selectAnswer(currentQ._id, correctOpt.key as OptionLabel);
+                  }
+                  setHintQuestionId(currentQ._id);
+                  Toast.show({ type: 'success', text1: '💡 Hint revealed!', text2: 'Correct answer selected for you.' });
+                },
+                () => Toast.show({ type: 'info', text1: 'Ad not ready yet', text2: 'Try again in a moment.' })
+              );
+            }}
+            className="flex-row items-center justify-center bg-amber-50 border border-amber-200 rounded-xl py-2 mb-3"
+          >
+            <Text className="text-amber-700 text-sm font-semibold">💡 Watch ad for hint</Text>
+          </TouchableOpacity>
+        )}
 
         <View className="flex-row gap-3">
           {currentIndex > 0 && (

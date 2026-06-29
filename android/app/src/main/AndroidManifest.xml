@@ -90,6 +90,11 @@
       android:resource="@color/primary"
       tools:replace="android:resource" />
 
+    <!-- AdMob App ID -->
+    <meta-data
+      android:name="com.google.android.gms.ads.APPLICATION_ID"
+      android:value="ca-app-pub-4897943258060219~7356146761"/>
+
     <!-- React Native Metro bundler dev overlay (debug only) -->
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"
       android:exported="false" />

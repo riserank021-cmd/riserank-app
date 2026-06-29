@@ -31,6 +31,7 @@ import {
 } from '../../components';
 import { StreakMilestoneModal } from '../../components/ui/StreakMilestoneModal';
 import { useStreakMilestone } from '../../hooks/useStreakMilestone';
+import { BannerAdView } from '../../components/ads/BannerAdView';
 import type { Quiz, CurrentAffair } from '../../types/api.types';
 import type { AppTabParamList, HomeStackParamList } from '../../types/navigation.types';
 import { t } from '../../utils/format';
@@ -231,6 +232,9 @@ export function HomeScreen() {
         {/* Bottom spacer */}
         <View className="h-6" />
       </ScrollView>
+
+      {/* Banner ad — pinned above bottom nav */}
+      <BannerAdView />
 
       {/* Streak milestone celebration */}
       {milestone !== null && (
