@@ -2,10 +2,10 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "34.0.0"
+        buildToolsVersion = "35.0.0"
         minSdkVersion    = 23          // Android 6.0+ (covers 98 %+ of active devices)
-        compileSdkVersion = 34
-        targetSdkVersion  = 34
+        compileSdkVersion = 35
+        targetSdkVersion  = 35
         ndkVersion        = "26.1.10909125"
         kotlinVersion     = "1.9.22"
         // react-native-google-mobile-ads reads this from google-services.json via the

@@ -49,7 +49,7 @@ android {
         applicationId "com.riserank.app"
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 3
         versionName "1.1.0"
         // Multidex required when minSdk < 21 — kept for safety
         multiDexEnabled true
