@@ -25,17 +25,19 @@ export function OTPScreen({ route, navigation }: AuthScreenProps<'OTP'>) {
   }, [resendCountdown]);
 
   const handleComplete = async (otp: string) => {
+    if (purpose === 'password_reset') {
+      // For password reset, don't call verify-email — just carry the OTP to ResetPassword
+      // where backend verifies it together with the new password.
+      navigation.navigate('ResetPassword', { email, otp });
+      return;
+    }
+
+    // Email verification flow
     setIsVerifying(true);
     try {
       await authService.verifyOTP(otp);
-      Toast.show({ type: 'success', text1: 'Email verified!', text2: 'You're all set.' });
-
-      if (purpose === 'email_verification') {
-        // RootNavigator will redirect to App since auth state is already set
-      } else {
-        // Password reset — navigate back to reset screen
-        navigation.navigate('ResetPassword', { email });
-      }
+      Toast.show({ type: 'success', text1: 'Email verified!', text2: "You're all set." });
+      // RootNavigator will redirect to App since auth state is already set
     } catch (err: any) {
       Toast.show({
         type: 'error',

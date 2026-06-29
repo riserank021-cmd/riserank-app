@@ -47,6 +47,9 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
 
         <TextInput
           ref={ref}
+          // Key change forces remount on Android when secureTextEntry toggles,
+          // preventing the bug where dots persist after showing password.
+          key={isPassword ? (showPassword ? 'text' : 'password') : undefined}
           className="flex-1 py-3 text-text-primary text-base"
           placeholderTextColor="#94A3B8"
           secureTextEntry={secure}

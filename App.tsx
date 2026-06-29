@@ -36,7 +36,7 @@ initCrashReporter();
 // Configure Google Sign-In once at module load time.
 // Replace the string below with your Web Client ID from Google Cloud Console,
 // or read it from react-native-config: Config.GOOGLE_WEB_CLIENT_ID
-configureGoogleSignIn(process.env.GOOGLE_WEB_CLIENT_ID ?? 'YOUR_WEB_CLIENT_ID_HERE');
+configureGoogleSignIn('850247455628-3tqi27p6reju52k720v23j70c0d3ta0l.apps.googleusercontent.com');
 
 function AppInner() {
   // Subscribes to network changes and keeps appStore.isOnline updated
@@ -81,7 +81,7 @@ export default function App() {
   }, [hydrateTheme]);
 
   return (
-    <ErrorBoundary onError={reportError}>
+    <ErrorBoundary onError={reportError} navigationRef={navigationRef}>
       <GestureHandlerRootView className="flex-1">
         <SafeAreaProvider>
           <AppInner />

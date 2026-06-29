@@ -171,7 +171,7 @@ export function HomeScreen() {
                   </Text>
                   <View className="flex-row mt-3 gap-3">
                     <Text className="text-orange-100 text-xs">
-                      📝 {dailyQuiz.questions.length} Qs
+                      📝 {(dailyQuiz.questions ?? []).length} Qs
                     </Text>
                     <Text className="text-orange-100 text-xs">
                       ⏱ {dailyQuiz.durationMinutes} min

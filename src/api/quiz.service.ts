@@ -9,8 +9,7 @@ import type { Language } from '../utils/constants';
 export interface QuizListParams {
   page?: number;
   limit?: number;
-  category?: string;
-  examType?: string;
+  examCategory?: string;  // backend param name (was incorrectly 'category')
   search?: string;
 }
 

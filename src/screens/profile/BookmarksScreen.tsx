@@ -21,7 +21,7 @@ export function BookmarksScreen({ navigation }: Props) {
 
   const fetcher = useCallback(async (page: number, limit: number) => {
     const { data } = await userService.getBookmarks({ page, limit });
-    const items: Question[] = data.data ?? [];
+    const items: Question[] = (data.data as Question[]) ?? [];
     return {
       data: items,
       hasNextPage: data.pagination?.hasNextPage ?? false,

@@ -39,7 +39,7 @@ function validate(name: string, email: string, password: string, phone: string):
 }
 
 export function RegisterScreen({ navigation }: AuthScreenProps<'Register'>) {
-  const { register, isLoading, user } = useAuth();
+  const { register, isLoading } = useAuth();
   const googleSignIn = useAuthStore((s) => s.googleSignIn);
 
   const [name, setName] = useState('');
@@ -72,11 +72,14 @@ export function RegisterScreen({ navigation }: AuthScreenProps<'Register'>) {
 
     try {
       await register({ name: name.trim(), email: email.trim().toLowerCase(), password, phone: phone || undefined });
-      // After registration, send OTP and navigate to verify
-      navigation.navigate('OTP', {
-        userId: user!._id,
-        email: email.trim().toLowerCase(),
-        purpose: 'email_verification',
+      // After registration isAuthenticated=true and RootNavigator switches to AppNavigator,
+      // making the OTP screen (auth stack) unreachable. Show a toast instead — the user
+      // can verify their email from the Profile screen's "Verify Email" banner.
+      Toast.show({
+        type: 'success',
+        text1: 'Account created! 🎉',
+        text2: 'Check your email to verify your account.',
+        visibilityTime: 4000,
       });
     } catch (err: any) {
       Toast.show({

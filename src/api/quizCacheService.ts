@@ -45,7 +45,7 @@ export async function getQuizById(quizId: string): Promise<CachedResult<Quiz>> {
 // ── Quiz list ─────────────────────────────────────────────────────────────────
 
 const isBaselineQuery = (params?: QuizListParams): boolean =>
-  !params?.category && !params?.search && (params?.page ?? 1) === 1;
+  !params?.examCategory && !params?.search && (params?.page ?? 1) === 1;
 
 export async function listQuizzes(
   params?: QuizListParams,

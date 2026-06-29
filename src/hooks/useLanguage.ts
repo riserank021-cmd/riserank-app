@@ -22,7 +22,7 @@ export function useLanguage() {
   const setLanguage = useAppStore((s) => s.setLanguage);
 
   const t = useCallback(
-    (field: Bilingual) => translate(field, language),
+    (field: Bilingual | undefined | null) => translate(field, language),
     [language]
   );
 

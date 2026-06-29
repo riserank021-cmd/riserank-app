@@ -42,15 +42,19 @@ export const QuizCard = React.memo(function QuizCard({ quiz, onPress }: QuizCard
       <View className="flex-row mt-3 gap-4">
         <View className="flex-row items-center">
           <Text>📝 </Text>
-          <Text className="text-text-secondary text-xs">{quiz.questions.length} questions</Text>
+          <Text className="text-text-secondary text-xs">{(quiz.questions ?? []).length} questions</Text>
         </View>
         <View className="flex-row items-center">
           <Text>⏱ </Text>
-          <Text className="text-text-secondary text-xs">{quiz.durationMinutes} min</Text>
+          <Text className="text-text-secondary text-xs">
+            {quiz.durationMinutes ?? Math.round((quiz.durationSeconds ?? 0) / 60)} min
+          </Text>
         </View>
         <View className="flex-row items-center">
           <Text>⭐ </Text>
-          <Text className="text-text-secondary text-xs">{quiz.totalMarks} marks</Text>
+          <Text className="text-text-secondary text-xs">
+            {quiz.totalMarks != null ? `${quiz.totalMarks} marks` : `${(quiz.questions ?? []).length} marks`}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

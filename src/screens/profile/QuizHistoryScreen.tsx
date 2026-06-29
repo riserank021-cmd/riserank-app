@@ -23,7 +23,7 @@ export function QuizHistoryScreen({ navigation }: Props) {
     rootNav.dispatch(
       CommonActions.navigate({
         name: 'QuizTab',
-        params: { screen: 'QuizReview', params: { attemptId } },
+        params: { screen: 'QuizReview', params: { attemptId, source: 'history' } },
       })
     );
   };

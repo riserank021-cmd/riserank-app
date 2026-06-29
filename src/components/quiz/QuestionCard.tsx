@@ -45,7 +45,7 @@ export function QuestionCard({
   onBookmark,
   isBookmarked = false,
 }: QuestionCardProps) {
-  const questionText = t(question.text, language);
+  const questionText = t(question.questionText, language);
 
   // One Animated.Value per option label — persists across re-renders for this question
   const scaleAnims = useRef<Record<string, Animated.Value>>(
@@ -113,24 +113,24 @@ export function QuestionCard({
       {/* Options */}
       <View className="px-4 gap-3">
         {question.options.map((opt) => {
-          const isSelected = selectedOption === opt.label;
-          const { default: def, selected } = OPTION_COLORS[opt.label];
+          const isSelected = selectedOption === opt.key;
+          const { default: def, selected } = OPTION_COLORS[opt.key] ?? OPTION_COLORS['A'];
           const optionText = t(opt.text, language);
 
           return (
             <Animated.View
-              key={opt.label}
-              style={{ transform: [{ scale: scaleAnims[opt.label] }] }}
+              key={opt.key}
+              style={{ transform: [{ scale: scaleAnims[opt.key] ?? new Animated.Value(1) }] }}
             >
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => {
                   Vibration.vibrate(30); // light tap
-                  playTap(opt.label);
-                  onSelect(opt.label as OptionLabel);
+                  playTap(opt.key);
+                  onSelect(opt.key as OptionLabel);
                 }}
                 accessibilityRole="radio"
-                accessibilityLabel={`Option ${opt.label}: ${optionText}`}
+                accessibilityLabel={`Option ${opt.key}: ${optionText}`}
                 accessibilityState={{ selected: isSelected }}
                 className={`flex-row items-start bg-surface-card border-2 rounded-2xl p-4 ${
                   isSelected ? selected : def
@@ -144,7 +144,7 @@ export function QuestionCard({
                   <Text
                     className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-text-secondary'}`}
                   >
-                    {opt.label}
+                    {opt.key}
                   </Text>
                 </View>
                 <Text

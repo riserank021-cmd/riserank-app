@@ -49,7 +49,7 @@ export function SkeletonLoader({ width, height, borderRadius = 8, style }: Skele
   return (
     <Animated.View
       style={[
-        { width, height, borderRadius, backgroundColor: baseColor },
+        { width: width as any, height, borderRadius, backgroundColor: baseColor },
         { opacity },
         style,
       ]}

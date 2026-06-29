@@ -13,8 +13,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  BackHandler,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CommonActions } from '@react-navigation/native';
 
 // ─────────────────────────────────────────────
 // Types
@@ -24,6 +26,8 @@ interface Props {
   children: ReactNode;
   /** Optional callback to report the error to an external service */
   onError?: (error: Error, info: ErrorInfo) => void;
+  /** Optional navigation ref to allow going back from error screen */
+  navigationRef?: React.RefObject<any>;
 }
 
 interface State {
@@ -72,6 +76,17 @@ export class ErrorBoundary extends Component<Props, State> {
       errorInfo: null,
       showDetails: false,
     });
+  };
+
+  handleGoBack = () => {
+    this.handleReset();
+    // Try navigation ref first
+    const nav = this.props.navigationRef?.current;
+    if (nav?.canGoBack?.()) {
+      nav.goBack();
+    }
+    // Fallback: Android hardware back
+    BackHandler.exitApp();
   };
 
   toggleDetails = () => {
@@ -123,13 +138,12 @@ export class ErrorBoundary extends Component<Props, State> {
               maxWidth: 320,
             }}
           >
-            An unexpected error occurred. Please try restarting the app. If the
-            problem persists, contact support at support@riserank.in
+            An unexpected error occurred. You can go back or try again.
           </Text>
 
-          {/* Retry button */}
+          {/* Go Back button */}
           <TouchableOpacity
-            onPress={this.handleReset}
+            onPress={this.handleGoBack}
             activeOpacity={0.85}
             style={{
               backgroundColor: '#2563EB',
@@ -142,6 +156,25 @@ export class ErrorBoundary extends Component<Props, State> {
             }}
           >
             <Text style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 15 }}>
+              ← Go Back
+            </Text>
+          </TouchableOpacity>
+
+          {/* Retry button */}
+          <TouchableOpacity
+            onPress={this.handleReset}
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: '#F1F5F9',
+              borderRadius: 12,
+              paddingVertical: 14,
+              paddingHorizontal: 40,
+              marginBottom: 12,
+              minWidth: 200,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: '#1E293B', fontWeight: '600', fontSize: 15 }}>
               Try Again
             </Text>
           </TouchableOpacity>

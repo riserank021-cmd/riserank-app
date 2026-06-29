@@ -106,6 +106,7 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.core:core-ktx:1.13.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Firebase (BOM keeps all Firebase libs version-consistent)
     if (file("google-services.json").exists()) {
@@ -114,3 +115,6 @@ dependencies {
         implementation("com.google.firebase:firebase-analytics")
     }
 }
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesAppBuildGradle(project)

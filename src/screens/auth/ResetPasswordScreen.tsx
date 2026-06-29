@@ -11,8 +11,9 @@ import { Button, Input } from '../../components';
 import type { AuthScreenProps } from '../../types/navigation.types';
 
 export function ResetPasswordScreen({ route, navigation }: AuthScreenProps<'ResetPassword'>) {
-  const { email } = route.params;
-  const [otp, setOtp] = useState('');
+  const { email, otp: prefillOtp } = route.params;
+  // OTP is pre-filled when arriving from OTPScreen (password_reset flow)
+  const [otp, setOtp] = useState(prefillOtp ?? '');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -70,17 +71,20 @@ export function ResetPasswordScreen({ route, navigation }: AuthScreenProps<'Rese
           </Text>
 
           <View className="mt-8">
-            <Input
-              label="OTP Code"
-              placeholder="123456"
-              keyboardType="number-pad"
-              maxLength={6}
-              returnKeyType="next"
-              onSubmitEditing={() => passwordRef.current?.focus()}
-              value={otp}
-              onChangeText={setOtp}
-              error={errors.otp}
-            />
+            {/* Only show OTP field if not already provided by OTPScreen */}
+            {!prefillOtp && (
+              <Input
+                label="OTP Code"
+                placeholder="123456"
+                keyboardType="number-pad"
+                maxLength={6}
+                returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
+                value={otp}
+                onChangeText={setOtp}
+                error={errors.otp}
+              />
+            )}
             <Input
               ref={passwordRef}
               label="New Password"
